@@ -23,7 +23,9 @@
 
 #define unlikely(x) x
 
-#ifdef LIBUUID
+#ifdef __FreeBSD__
+#include <uuid.h>
+#elif defined(LIBUUID)
 #include <uuid/uuid.h>
 #else
 typedef struct {
