@@ -3201,7 +3201,9 @@ static int format(int argc, char **argv, struct command *cmd, struct plugin *plu
 					nvme_status_to_string(err), err);
 	else {
 		printf("Success formatting namespace:%x\n", cfg.namespace_id);
+#ifdef BLKRRPART
 		ioctl(fd, BLKRRPART);
+#endif
 		if (cfg.reset && S_ISCHR(nvme_stat.st_mode))
 			nvme_reset_controller(fd);
 	}

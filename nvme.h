@@ -23,7 +23,7 @@
 
 #define unlikely(x) x
 
-#ifdef __FreeBSD__
+#if defined(__FreeBSD__)
 #include <uuid.h>
 #elif defined(LIBUUID)
 #include <uuid/uuid.h>
