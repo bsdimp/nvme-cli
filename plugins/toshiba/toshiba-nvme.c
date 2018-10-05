@@ -100,6 +100,9 @@ static int nvme_get_sct_status(int fd, __u32 device_mask)
 	if (device_mask != MASK_IGNORE) {
 		__u32 supported = 0;
 		switch (status[1]) {
+		case 0xe:
+			supported = 1;
+			break;
 		case CODE_0:
 			supported = (device_mask & MASK_0);
 			break;
@@ -215,7 +218,13 @@ static int nvme_get_internal_log(int fd, const char* const filename, bool curren
 	const size_t page_data_len = page_sector_len * 512;// 32 sectors per page
 	// By trial and error it seems that the largest transfer chunk size
 	// is 128 * 32 =  4k sectors = 2MB
+#ifdef __linux__
 	const __u32 max_pages = 128;
+#endif
+#ifdef __FreeBSD__
+	// But on FreeBSD we're limited to 1MB for silly reasons.
+	const __u32 max_pages = 64;
+#endif
 	err = nvme_sct_command_transfer_log(fd, current);
 	if (err) {
 		fprintf(stderr, "%s: SCT command transfer failed\n", __func__);
