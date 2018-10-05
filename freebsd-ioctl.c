@@ -3,6 +3,7 @@
 
 #include <sys/ioctl.h>
 #include <errno.h>
+#include <stdio.h>
 
 #include "linux/nvme_ioctl.h"
 
@@ -21,6 +22,7 @@ freebsd_ioctl(int fd, unsigned long cmd, ...)
 	case NVME_IOCTL_RESCAN:
 	default:
 		errno = ENOTTY;
+		printf("Unknown ioctl %#lx\n", cmd);
 		return -1;
 	}
 }

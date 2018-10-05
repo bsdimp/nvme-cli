@@ -64,4 +64,7 @@ typedef uint16_t __be16;
 typedef uint32_t __be32;
 typedef uint64_t __be64;
 
+#define ioctl freebsd_ioctl
+int freebsd_ioctl(int fd, unsigned long cmd, ...);
+
 #endif /* _LINUX_TYPES_H_ */
