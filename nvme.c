@@ -4679,7 +4679,7 @@ close_fd:
 	return err;
 }
 
-static int passthru(int argc, char **argv, int ioctl_cmd, const char *desc, struct command *cmd)
+static int passthru(int argc, char **argv, unsigned long ioctl_cmd, const char *desc, struct command *cmd)
 {
 	void *data = NULL, *metadata = NULL;
 	int err = 0, wfd = STDIN_FILENO, fd;
