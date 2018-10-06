@@ -88,6 +88,7 @@ static int nvme_get_sct_status(int fd, __u32 device_mask)
 		goto end;
 	}
 	const unsigned char* status = data;
+	printf("SCT: %#x %#x\n", status[0], status[1]);
 	if (status[0] != 1U) {
 		// Eek, wrong version in status header
 		fprintf(stderr, "%s: unexpected value in SCT status[0]:(%x)\n", __func__, status[0]);
