@@ -74,10 +74,10 @@ clean:
 	$(RM) verify-no-dep
 
 clobber: clean
-	$(MAKE) -C Documentation clobber
+#	$(MAKE) -C Documentation clobber
 
 install-man:
-	$(MAKE) -C Documentation install-no-build
+#	$(MAKE) -C Documentation install-no-build
 
 install-bin: default
 	$(INSTALL) -d $(DESTDIR)$(SBINDIR)
