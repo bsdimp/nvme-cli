@@ -84,8 +84,8 @@ install-bin: default
 	$(INSTALL) -m 755 nvme $(DESTDIR)$(SBINDIR)
 
 install-bash-completion:
-	$(INSTALL) -d $(DESTDIR)$(PREFIX)/share/bash-completion/completions
-	$(INSTALL) -m 644 -T ./completions/bash-nvme-completion.sh $(DESTDIR)$(PREFIX)/share/bash-completion/completions/nvme
+#	$(INSTALL) -d $(DESTDIR)$(PREFIX)/share/bash-completion/completions
+#	$(INSTALL) -m 644 -T ./completions/bash-nvme-completion.sh $(DESTDIR)$(PREFIX)/share/bash-completion/completions/nvme
 
 install-zsh-completion:
 	$(INSTALL) -d $(DESTDIR)$(PREFIX)/share/zsh/site-functions
