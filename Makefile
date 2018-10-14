@@ -65,7 +65,7 @@ doc: $(NVME)
 test:
 	$(MAKE) -C tests/ run
 
-all:
+all: $(NVME)
 
 clean:
 	$(RM) $(NVME) $(OBJS) $(PLUGIN_OBJS) *~ a.out NVME-VERSION-FILE *.tar* nvme.spec version control nvme-*.deb
