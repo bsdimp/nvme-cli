@@ -88,8 +88,8 @@ install-bash-completion:
 #	$(INSTALL) -m 644 -T ./completions/bash-nvme-completion.sh $(DESTDIR)$(PREFIX)/share/bash-completion/completions/nvme
 
 install-zsh-completion:
-	$(INSTALL) -d $(DESTDIR)$(PREFIX)/share/zsh/site-functions
-	$(INSTALL) -m 644 -T ./completions/_nvme $(DESTDIR)$(PREFIX)/share/zsh/site-functions/_nvme
+#	$(INSTALL) -d $(DESTDIR)$(PREFIX)/share/zsh/site-functions
+#	$(INSTALL) -m 644 -T ./completions/_nvme $(DESTDIR)$(PREFIX)/share/zsh/site-functions/_nvme
 
 install: install-bin install-man install-bash-completion install-zsh-completion
 
