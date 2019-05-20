@@ -957,7 +957,7 @@ out:
 	return ret;
 }
 
-int discover(const char *desc, int argc, char **argv, bool connect)
+int fabric_discover(const char *desc, int argc, char **argv, bool connect)
 {
 	char argstr[BUF_SIZE];
 	int ret;
@@ -1000,7 +1000,7 @@ int discover(const char *desc, int argc, char **argv, bool connect)
 	}
 }
 
-int connect(const char *desc, int argc, char **argv)
+int fabric_connect(const char *desc, int argc, char **argv)
 {
 	char argstr[BUF_SIZE];
 	int instance, ret;
@@ -1133,7 +1133,7 @@ static int disconnect_by_device(char *device)
 	return remove_ctrl(instance);
 }
 
-int disconnect(const char *desc, int argc, char **argv)
+int fabric_disconnect(const char *desc, int argc, char **argv)
 {
 	const char *nqn = "nqn name";
 	const char *device = "nvme device";
@@ -1177,7 +1177,7 @@ int disconnect(const char *desc, int argc, char **argv)
 	return ret;
 }
 
-int disconnect_all(const char *desc, int argc, char **argv)
+int fabric_disconnect_all(const char *desc, int argc, char **argv)
 {
 	struct subsys_list_item *slist;
 	int i, j, ret = 0, subcnt = 0;
