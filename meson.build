@@ -154,6 +154,15 @@ conf.set10(
     description: 'Is compiler warning about unused static line function?'
 )
 conf.set10(
+    'HAVE_IF_ALG',
+    cc.compiles(
+        '''#include <linux/if_alg.h>''',
+        name: 'linux/if_alg.h'
+
+    ),
+    description: 'Is linux/if_alg.h include-able?'
+)
+conf.set10(
     'HAVE_SED_OPAL',
     cc.compiles(
         '''#include <linux/sed-opal.h>''',
@@ -278,7 +287,6 @@ sources = [
   'nvme-print.c',
   'nvme-print-stdout.c',
   'nvme-print-binary.c',
-  'nvme-rpmb.c',
   'nvme-wrap.c',
   'plugin.c',
   'libnvme-wrap.c',
@@ -286,6 +294,16 @@ sources = [
 if json_c_dep.found()
     sources += [
         'nvme-print-json.c',
+    ]
+endif
+
+if conf.get('HAVE_IF_ALG') == 1
+    sources += [
+      'nvme-rpmb.c',
+    ]
+else
+    sources += [
+      'nvme-rpmb-nope.c',
     ]
 endif
 
