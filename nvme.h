@@ -20,7 +20,6 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
-#include <endian.h>
 #include <sys/time.h>
 #include <sys/stat.h>
 
