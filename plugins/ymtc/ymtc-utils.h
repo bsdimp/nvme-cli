@@ -8,8 +8,6 @@
 #define NM_SIZE                 2
 #define RAW_SIZE                7
 
-typedef unsigned char           u8;
-
 /* Additional smart external ID */
 #define SI_VD_PROGRAM_FAIL_ID                        0xAB
 #define SI_VD_ERASE_FAIL_ID                          0xAC
