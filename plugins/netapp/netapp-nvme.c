@@ -16,6 +16,7 @@
 
 #include <stdio.h>
 #include <dirent.h>
+#include <libgen.h>
 #include <sys/stat.h>
 #include <stdlib.h>
 #include <fcntl.h>
