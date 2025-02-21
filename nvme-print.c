@@ -781,6 +781,7 @@ void nvme_show_endurance_log(struct nvme_endurance_group_log *endurance_log,
 	nvme_print(endurance_log, flags, endurance_log, group_id, devname);
 }
 
+#ifdef LC_MEASUREMENT
 static bool is_fahrenheit_country(const char *country)
 {
 	static const char * const countries[] = {
@@ -796,9 +797,13 @@ static bool is_fahrenheit_country(const char *country)
 
 	return false;
 }
+#endif
 
 static bool is_temperature_fahrenheit(void)
 {
+#ifndef LC_MEASUREMENT
+	return false;
+#else
 	const char *locale, *underscore;
 	char country[3] = { 0 };
 
@@ -815,6 +820,7 @@ static bool is_temperature_fahrenheit(void)
 	memcpy(country, locale, 2);
 
 	return is_fahrenheit_country(country);
+#endif
 }
 
 const char *nvme_degrees_string(long t)
