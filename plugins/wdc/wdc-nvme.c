@@ -2012,8 +2012,17 @@ static __u64 wdc_get_drive_capabilities(nvme_root_t r, struct nvme_dev *dev)
 		case WDC_NVME_SN740_DEV_ID_1:
 		case WDC_NVME_SN740_DEV_ID_2:
 		case WDC_NVME_SN740_DEV_ID_3:
-		case WDC_NVME_SN340_DEV_ID:
 			capabilities = WDC_DRIVE_CAP_DUI;
+			break;
+		case WDC_NVME_SN340_DEV_ID:
+			/*
+			 * The SN340 supports D0, but not the call to verify
+			 * that the page is supported, so we jam it in here.
+			 * The format appears to differ a bit for the lifetime
+			 * and trailing hour write-amp, unless the units are
+			 * weird.
+			 */
+			capabilities = WDC_DRIVE_CAP_DUI | WDC_DRIVE_CAP_D0_LOG_PAGE;
 			break;
 
 		case WDC_NVME_ZN350_DEV_ID:
@@ -7626,12 +7635,6 @@ static int wdc_get_d0_log_page(nvme_root_t r, struct nvme_dev *dev, char *format
 	if (ret < 0) {
 		fprintf(stderr, "ERROR: WDC: invalid output format\n");
 		return ret;
-	}
-
-	/* verify the 0xD0 log page is supported */
-	if (wdc_nvme_check_supported_log_page(r, dev, WDC_NVME_GET_VU_SMART_LOG_OPCODE) == false) {
-		fprintf(stderr, "ERROR: WDC: 0xD0 Log Page not supported\n");
-		return -1;
 	}
 
 	data = (__u8 *)malloc(sizeof(__u8) * WDC_NVME_VU_SMART_LOG_LEN);
