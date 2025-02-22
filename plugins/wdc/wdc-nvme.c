@@ -1450,6 +1450,7 @@ static double calc_percent(uint64_t numerator, uint64_t denominator)
 static int wdc_get_pci_ids(nvme_root_t r, struct nvme_dev *dev,
 			   uint32_t *device_id, uint32_t *vendor_id)
 {
+#ifndef __FreeBSD__
 	char vid[256], did[256], id[32];
 	nvme_ctrl_t c = NULL;
 	nvme_ns_t n = NULL;
@@ -1515,6 +1516,26 @@ static int wdc_get_pci_ids(nvme_root_t r, struct nvme_dev *dev,
 
 	*device_id = strtol(id, NULL, 0);
 	return 0;
+#else
+	char path[512];
+	FILE *fp;
+
+	snprintf(path, sizeof(path), "pciconf -l %s", dev->name);
+	/* nvme7@pci0:99:0:0:	class=0x010802 rev=0x01 hdr=0x00 vendor=0x1344 device=0x51a2 subvendor=0x1344 subdevice=0x4000 */
+	fp = popen(path, "r");
+	if (fgets(path, sizeof(path), fp) != NULL) {
+		const char *walker;
+
+		walker = strstr(path, " vendor=");
+		if (walker)
+			*vendor_id = strtol(walker + 8, NULL, 16);
+		walker = strstr(path, " device=");
+		if (walker)
+			*device_id = strtol(walker + 8, NULL, 16);
+	}
+	pclose(fp);
+	return 0;
+#endif
 }
 
 static int wdc_get_vendor_id(struct nvme_dev *dev, uint32_t *vendor_id)

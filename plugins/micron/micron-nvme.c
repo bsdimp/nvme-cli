@@ -72,10 +72,12 @@ enum eDriveModel {
 
 #define MICRON_VENDOR_ID 0x1344
 
+#ifndef __FreeBSD__
 static char *fvendorid1 = "/sys/class/nvme/nvme%d/device/vendor";
 static char *fvendorid2 = "/sys/class/misc/nvme%d/device/vendor";
 static char *fdeviceid1 = "/sys/class/nvme/nvme%d/device/device";
 static char *fdeviceid2 = "/sys/class/misc/nvme%d/device/device";
+#endif
 static unsigned short vendor_id;
 static unsigned short device_id;
 
@@ -104,6 +106,7 @@ static void WriteData(__u8 *data, __u32 len, const char *dir, const char *file, 
 	}
 }
 
+#ifndef __FreeBSD__
 static int ReadSysFile(const char *file, unsigned short *id)
 {
 	int ret = 0;
@@ -124,12 +127,14 @@ static int ReadSysFile(const char *file, unsigned short *id)
 
 	return ret;
 }
+#endif
 
 static enum eDriveModel GetDriveModel(int idx)
 {
 	enum eDriveModel eModel = UNKNOWN_MODEL;
 	char path[512];
 
+#ifndef __FreeBSD__
 	sprintf(path, fvendorid1, idx);
 	if (ReadSysFile(path, &vendor_id) < 0) {
 		sprintf(path, fvendorid2, idx);
@@ -140,7 +145,26 @@ static enum eDriveModel GetDriveModel(int idx)
 		sprintf(path, fdeviceid2, idx);
 		ReadSysFile(path, &device_id);
 	}
+#else
+	FILE *fp;
+
+	snprintf(path, sizeof(path), "pciconf -l nvme%d", idx);
+	/* nvme7@pci0:99:0:0:	class=0x010802 rev=0x01 hdr=0x00 vendor=0x1344 device=0x51a2 subvendor=0x1344 subdevice=0x4000 */
+	fp = popen(path, "r");
+	if (fgets(path, sizeof(path), fp) != NULL) {
+		const char *walker;
+
+		walker = strstr(path, " vendor=");
+		if (walker)
+			vendor_id = strtol(walker + 8, NULL, 16);
+		walker = strstr(path, " device=");
+		if (walker)
+			device_id = strtol(walker + 8, NULL, 16);
+	}
+	pclose(fp);
+#endif
 	if (vendor_id == MICRON_VENDOR_ID) {
+		printf("Micron %#x\n", device_id);
 		switch (device_id) {
 		case 0x5196:
 		case 0x51A0:
@@ -1558,7 +1582,7 @@ static int micron_smart_ext_log(int argc, char **argv,
 	if (sscanf(argv[optind], "/dev/nvme%d", &ctrlIdx) != 1)
 		ctrlIdx = 0;
 	eModel = GetDriveModel(ctrlIdx);
-	if (eModel != M51CX) {
+	if (eModel != M51CX && 0) {
 		printf("Unsupported drive model for vs-smart-ext-log command\n");
 		err = -1;
 		goto out;
@@ -2614,7 +2638,7 @@ static int micron_ocp_smart_health_logs(int argc, char **argv, struct command *c
 	}
 
 	/* check for models that support 0xC0 log */
-	if (eModel != M51CX) {
+	if (eModel != M51AX) {
 		printf("Unsupported drive model for vs-smart-add-log command\n");
 		err = -1;
 		goto out;
