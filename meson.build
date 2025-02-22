@@ -223,7 +223,7 @@ configure_file(
   output:        'nvme.spec',
   configuration: substs,
 )
-
+'''
 disc = configure_file(
   input: 'etc/discovery.conf.in',
   output: 'discovery.conf',
@@ -272,7 +272,7 @@ foreach file : udev_files
     configuration: substs,
   )
 endforeach
-
+'''
 ################################################################################
 add_project_arguments(['-fomit-frame-pointer', '-D_GNU_SOURCE',
                        '-include', 'config.h'], language : 'c')
@@ -332,7 +332,7 @@ install_data('completions/bash-nvme-completion.sh',
              install_dir: datadir + '/bash-completion/completions')
 install_data('completions/_nvme',
              install_dir: datadir + '/zsh/site-functions')
-
+'''
 foreach file : dracut_files
   install_data(meson.current_build_dir() + '/' + file,
                install_dir: dracutrulesdir)
@@ -350,7 +350,7 @@ endforeach
 
 install_data(disc,
              install_dir: join_paths(sysconfdir, 'nvme'))
-
+'''
 ################################################################################
 if meson.version().version_compare('>=0.53.0')
     path_dict = {
