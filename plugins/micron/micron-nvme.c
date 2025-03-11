@@ -164,7 +164,6 @@ static enum eDriveModel GetDriveModel(int idx)
 	pclose(fp);
 #endif
 	if (vendor_id == MICRON_VENDOR_ID) {
-		printf("Micron %#x\n", device_id);
 		switch (device_id) {
 		case 0x5196:
 		case 0x51A0:
